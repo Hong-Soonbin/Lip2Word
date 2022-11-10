@@ -17,7 +17,7 @@ from model.input_fn import input_fn
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '--data_dir',
-    default=r'C:\Users\hcho0\Desktop\dataset2',
+    default=r'/home/ubuntu/Lip2Word/dataset',
     help="Directory with processed dataset"
 )
 parser.add_argument(
@@ -27,7 +27,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '--params_file',
-    default=r"C:\Users\hcho0\Desktop\Lip2Word_hangul\Lip2Word_hangul\hyperparameters\inception",
+    default=r"/home/ubuntu/Lip2Word/hyperparameters/inception",
     help="Path to the .json file containing the parameters"
 )
 parser.add_argument(
@@ -82,18 +82,18 @@ if __name__ == '__main__' :
     # Training data
     train_pathlist = Path(train_dir).glob("*.jpg")
     train_filenames = [str(path) for path in train_pathlist]
-    #print(train_filenames)
+    print(train_filenames)
 
-    train_filenames = [s for s in train_filenames if int(s.split("_")[0].split('\\')[-1])]
-    train_labels = [int(s.split("_")[1][1:]) for s in train_filenames]
+    train_filenames = [s.split('/')[-1] for s in train_filenames]
+    train_labels = [int(s.split('/')[-1].split('_')[1][1:]) for s in train_filenames]
 
     # Validation data
     val_pathlist = Path(val_dir).glob("*.jpg")
 
 
     val_filenames = [str(path) for path in val_pathlist]
-    val_filenames = [s for s in val_filenames if int(s.split("_")[0].split('\\')[-1])]
-    val_labels = [int(s.split("_")[1][1:]) for s in val_filenames]
+    val_filenames = [s.split('/')[-1] for s in val_filenames]
+    val_labels = [int(s.split('/')[-1].split('_')[1][1:]) for s in val_filenames]
     print(val_labels)
 
     # Data summary after loading
@@ -170,7 +170,7 @@ if __name__ == '__main__' :
 
     if not debugging :
         # Save results to .json file
-        # But first convert values from float32 to string
+        # But first convert values.split('/')[-1] from float32 to string
         for key in val_results :
             val_results[key] = str(val_results[key])
         with open(os.path.join(model_dir, "results.json"), 'w') as outfile:
